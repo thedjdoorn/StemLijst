@@ -1,0 +1,57 @@
+{layout base.latte}
+{block title}{$name}{/block}
+{block content}
+    {if isset($error)}
+        <div class="ui negative message">
+            <div class="header">
+                Fout
+            </div>
+            <p>{$error}</p>
+        </div>
+    {/if}
+    {if isset($success)}
+        <div class="ui positive message">
+            <div class="header">
+                Gelukt!
+            </div>
+            <p>{$success}</p>
+        </div>
+    {/if}
+    <h4>De {$name} Top 2000!</h4>
+    <p>Voeg je eigen lijst toe! Zet hier de code van je lijst neer (staat aan het einde van je deellink)</p>
+    <form class="ui form" action="/groep/{$slug}" method="post">
+        <input name="firstname" type="text" id="firstname" style="display: none">
+        <div class="ui fluid input"><input name="hash" placeholder="90da27f87a3adb5a91ff8762dap961505fd39bf0" type="text"></div><br>
+        <input class="ui button" type="submit" value="Insturen">
+    </form>
+    <div class="ui divider"></div>
+    {if count($names) == 0}
+        <p>Deze lijst bevat nog geen favorieten</p>
+    {elseif count($names) == 1}
+        <p>Deze lijst is gebaseerd op favorieten van <strong>{$names[0]}</strong></p>
+    {elseif count($names) == 2}
+        <p>Deze lijst is gebaseerd op favorieten van <strong>{$names[0]}</strong> en <strong>{$names[1]}</strong></p>
+    {else}
+        <p>Deze lijst is gebaseerd op favorieten van <strong>{$names[0]}</strong>, <strong>{$names[1]}</strong> en <strong>{count($names)-2} ander(en)</strong></p>
+    {/if}
+    {if count($list) != 0}
+        <table class="ui celled table">
+            <thead>
+            <tr><th>Plaats</th>
+                <th>Artiest</th>
+                <th>Titel</th>
+                <th>Aantal stemmen</th>
+            </tr></thead>
+            <tbody>
+            {foreach $list as $song}
+                <tr>
+                    <td data-label="Plaats">{$iterator->counter}</td>
+                    <td data-label="Artiest">{$song['artist']}</td>
+                    <td data-label="Titel">{$song['title']}</td>
+                    <td data-label="Aantal stemmen">{$song['votes']}</td>
+                </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    {/if}
+{/block}

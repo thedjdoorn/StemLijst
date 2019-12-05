@@ -1,6 +1,5 @@
 <?php
 require_once 'vendor/autoload.php';
-require_once 'test.php';
 require_once __DIR__.'/controller/Index.php';
 require_once __DIR__.'/controller/Groep.php';
 require_once __DIR__.'/controller/Stemlijst.php';
@@ -24,7 +23,27 @@ $klein->respond("GET", '/groep/[:slug]', function($request, $response){
     if(empty($request->slug)){
         $response->redirect('/');
     } else {
-        return (new \Stemlijst\GroepController())->create($request->param('name'));
+        $result = (new \Stemlijst\GroepController())->get($request->slug);
+        if(!$result){
+            $response->code(404);
+            return '';
+        } else {
+            return $result;
+        }
+    }
+});
+
+$klein->respond("POST", '/groep/[:slug]', function($request, $response){
+    if(empty($request->slug) || !empty($request->param('firstname') || empty($request->param('hash')))){
+        $response->redirect('/');
+    } else {
+        $result = (new \Stemlijst\GroepController())->addList($request->slug, $request->param('hash'));
+        if(!$result){
+            $response->code(404);
+            return '';
+        } else {
+            return $result;
+        }
     }
 });
 
@@ -36,6 +55,11 @@ $klein->respond("GET", '/putlist/[:hash]', function ($request, $response){
         $stemlijst->parse();
         return $stemlijst->save();
     }
+});
+
+$klein->respond("GET", '/over', function (){
+   $latte = new \Latte\Engine();
+   return $latte->renderToString(__DIR__.'/templates/about.latte');
 });
 
 //catch all errors
