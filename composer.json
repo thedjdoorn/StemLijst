@@ -2,7 +2,7 @@
     "require": {
         "klein/klein": "^2.1",
       "ext-pdo": "*",
-        "latte/latte": "^2.5",
+        "latte/latte": "^2.11.7",
         "fzaninotto/faker": "^1.9",
       "ext-json": "*",
       "php": ">=8.3"
